@@ -56,4 +56,4 @@ route '*' do
   route_path(item)
 end
 
-layout '*', :haml, :format => :html5
+layout '*', :haml, :format => :html5, :attr_wrapper => '"'

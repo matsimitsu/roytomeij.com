@@ -2,14 +2,14 @@
 ---
 
 - is_embedded ||= false
-.article
-  %h1 
+
+%article.article
+  %h1
     - if is_embedded
-      %a(href="#{route_path(item)}" title="Full article" class="permalink")= item[:title]
+      %a{:href => route_path(item)}= item[:title]
     - else
       = item[:title]
-  
+
   = render('_meta', :item => item)
 
-  .body
-    != content || partial(item)
+  != content || partial(item)

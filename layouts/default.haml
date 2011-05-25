@@ -2,81 +2,69 @@
 ---
 :ruby
   # may be set by partials
-  @config[:include_disqus_js] = false
 
   def keywords
     if is_front_page?
       tag_set.join(', ')
     else
-      tags = @item[:tags].nil? ? '' : @item[:tags].join(', ')
-      keywords = @item[:keywords] || ''
-      [keywords, tags].join(', ')
+      keywords = []
+      unless @item[:tags].nil?
+        keywords << @item[:tags]
+      end
+      unless @item[:keywords].nil?
+        keywords << @item[:keywords]
+      end
+      keywords.join(', ')
     end
   end
 
-  def link_unless_current(s)
-    "<li><a href='/#{s}.html'>#{s}</a></li>" if @item.identifier != "/#{s}/"
-  end
+  content = find_and_preserve(yield)
 
-  def logo
-    if is_front_page?
-      site_name
-    else
-      "<a href=\"/\">&laquo; #{site_name}</a>"
-    end
-  end
-
-!!! Strict
-%html
+!!!
+%html.no-js
   %head
-    %title= "#{@item[:title]} - Roy Tomeij"
-    %meta{:charset => "utf-8"}
-    %meta{:name => "keywords", :content => "#{keywords}"}
-    %meta{:name => "description", :content => "#{@item[:excerpt]}"}
-    %link{:href => "/assets/css/site.css", :rel => "stylesheet", :type => "text/css"}
-
-  %body
-    -# needed since some content render <pre> blocks
-    - content = find_and_preserve(yield)
-    #main
-      #header
-        .logo
-          = logo
-        #nav
-          %ul
-            != link_unless_current "about"
-            != link_unless_current "archives"
-            %li
-              %a(href='/atom.xml') rss
-            %li
-              %form(method="get" action="/search.html")
-                %input(type="search" placeholder="Search" name="query")
-      .clear
-
-      - if @item[:kind] == 'article'
-        = render('_article', :item => @item, :content => content)
-        = render('_other_articles_nav', :reference_item => @item)
-        .clear
-        - if disqus_shortname && !is_front_page?
-          = render('_disqus', :item => @item)
+    %title<
+      - if @item[:title]
+        = "#{@item[:title]} | #{site_name}"
       - else
-        = content
-      .clear
-
-    -# disqus: inserts number of commments
-    - if @config[:include_disqus_js] == true
-      :javascript
-        (function() {
-          var links = document.getElementsByTagName('a');
-          var query = '?';
-          for(var i = 0; i < links.length; i++) {
-            if(links[i].href.indexOf('#disqus_thread') >= 0) {
-              query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
-            }
-          }
-          document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/#{disqus_shortname}/get_num_replies.js' + query + '"></' + 'script>');
-        })();
-
+        = site_name
+    %meta{:charset => 'utf-8'}
+    %meta{:name => 'keywords', :content => keywords}
+    %meta{:name => 'description', :content => (@item[:excerpt] ? @item[:excerpt] : site_description)}
+    %link{:href => '/assets/css/site.css', :rel => 'stylesheet', :type => 'text/css'}
+    %script{:type => 'text/javascript', :src => '/assets/javascripts/modernizr-17.js'}
     = render('_ganalytics')
 
-    %script{:type => "text/javascript", :src => "/assets/javascripts/jquery-1.6.1.js"}
+  %body
+
+    #wrap
+
+      %header
+        - if is_front_page?
+          %h1#logo= site_name
+        - else
+          %p#logo
+            %a{:href => '/'}= site_name
+
+        %nav
+          %ul
+            %li
+              %a{:href => '/atom.xml'} Feed
+            %li
+              %a{:href => '/about.html'} About
+
+        %form#search{:method => 'get', :action => '/search.html'}
+          %fieldset
+            %legend Search
+            %input{:type => 'search', :placeholder => 'Search', :name => 'query'}
+
+      - if @item[:kind] == 'article'
+        %section#post
+          = render('_article', :item => @item, :content => content)
+          = render('_other_articles_nav', :reference_item => @item)
+          - if disqus_shortname && !is_front_page?
+            = render('_disqus')
+      - else
+        = content
+
+    %script{:type => 'text/javascript', :src => '/assets/javascripts/jquery-161.js'}

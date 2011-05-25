@@ -129,6 +129,10 @@ def site_name
   @config[:site_name]
 end
 
+def site_description
+  @config[:site_description]
+end
+
 def pretty_time(time)
   Time.parse(time).strftime("%b %d, %Y") if !time.nil?
 end

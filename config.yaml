@@ -19,11 +19,13 @@ deploy:
 base_url: http://roytomeij.com
 
 google_analytics:
-  domain: "roytomeij.com"
   site_id: UA-7045996-4
 
 # currently used by logo
 site_name: "Roy Tomeij"
+
+# default description
+site_description: "Personal homepage of Roy Tomeij, entreprenerd."
 
 # number of full featured posts to display on front
 featured_count: 0
