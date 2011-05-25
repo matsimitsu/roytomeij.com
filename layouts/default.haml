@@ -61,7 +61,6 @@
       - if @item[:kind] == 'article'
         %section#post
           = render('_article', :item => @item, :content => content)
-          = render('_other_articles_nav', :reference_item => @item)
           - if disqus_shortname && !is_front_page?
             = render('_disqus')
       - else

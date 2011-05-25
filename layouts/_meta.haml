@@ -2,10 +2,9 @@
 ---
 - if item[:kind] == 'article'
   %footer
-    %time{:datetime => item[:created_at]}= pretty_time(item[:created_at])
+    %time{:datetime => Time.parse(item[:created_at]).iso8601}= pretty_time(item[:created_at])
 
     - if item[:tags]
       %ul.tags
-      - item[:tags].sort.each do |tag|
-        %li
-          %a{:href => "/tags/#{tag}/"}= tag
+        - item[:tags].sort.each do |tag|
+          %li= tag

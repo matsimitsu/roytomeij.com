@@ -31,7 +31,7 @@ site_description: "Personal homepage of Roy Tomeij, entreprenerd."
 featured_count: 0
 
 # number of excerpted posts to display on front
-excerpt_count: 6
+excerpt_count: 3
 
 # number of other articles to reference at bottom of each article
 other_articles_max: 1

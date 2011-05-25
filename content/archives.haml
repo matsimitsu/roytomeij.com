@@ -3,10 +3,8 @@ title: Archives
 is_hidden: true
 ---
 
-%h1 Archives
+%section#archives
+  %h1 Archives
 
-.archives
-  %ul
-    - sorted_articles.each do |item|
-      %li
-        = render('_excerpt', :item => item)
+  - sorted_articles.each_with_index do |item, idx|
+    = render('_excerpt', :item => item)
