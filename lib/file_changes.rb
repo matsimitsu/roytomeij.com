@@ -15,8 +15,8 @@ module MGutz
     def initialize(store_filename = "file_changes.yaml")
       @store_filename = store_filename
 
-      if File.exists?(@store_filename)
-        @changes = YAML.load_file(@store_filename)
+      if File.exists?(@store_filename) && YAML.load_file(@store_filename).is_a?(Hash)
+        @changes =  YAML.load_file(@store_filename)
       else
         @changes = {}
       end
@@ -43,9 +43,9 @@ module MGutz
         item[:digest] = digest
         @changes[filename.to_sym] = item
         write_changes
-      elsif item[:digest] != digest 
+      elsif item[:digest] != digest
         item[:updated_at] = File.mtime(filename)
-        item[:digest] = digest 
+        item[:digest] = digest
         write_changes
       end
 
@@ -56,7 +56,7 @@ module MGutz
 
     def write_changes
       File.open(@store_filename, 'w') do |f|
-        YAML.dump @changes, f 
+        YAML.dump @changes, f
       end
     end
   end
